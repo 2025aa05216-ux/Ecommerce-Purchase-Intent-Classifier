@@ -25,7 +25,7 @@ st.dataframe(pd.DataFrame(metrics).T.syle.format('{:.3f}'))
 
 if file is not None:
     df = pd.read_csv(file)
-    X_scaled = scalar.transform(df)
+    X_scaled = scaler.transform(df)
 
     model=models[model_name]
     preds=model.predict(X_scaled)
