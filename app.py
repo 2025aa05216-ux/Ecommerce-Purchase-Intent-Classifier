@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import pickle
-from sklearn.metrics import confusion_matrix, classification_report
+#from sklearn.metrics import confusion_matrix, classification_report
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -34,10 +34,10 @@ if file is not None:
     st.write(preds)
 
     st.subheader("Confusion Matrix")
-    cm = confusion_matrix(preds, preds)
+    #cm = confusion_matrix(preds, preds)
     fig,ax = plt.subplots()
     sns.heatmap(cm, annot=True, fmt ='d', cmap='Blues', ax=ax)
     st.pyplot(fig)
 
     st.subheader("Classification Report")
-    st.text(classification_report(preds, preds))
+    #st.text(classification_report(preds, preds))
