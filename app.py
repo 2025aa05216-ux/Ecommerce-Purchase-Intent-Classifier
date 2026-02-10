@@ -1,27 +1,16 @@
 import streamlit as st
 import pandas as pd
-import joblib
-import seaborn as sns
+import pickle
+from sklearn.metrics import confusion_matrix, classification_report
 import matplotlib.pyplot as plt
-
-from sklearn.metrics import (
-    accuracy_score,
-    roc_auc_score,
-    precision_score,
-    recall_score,
-    f1_score,
-    matthews_corrcoef,
-    confusion_matrix,
-    classification_report
-)
-
+import seaborn as sns
 
 st.set_page_config(page_title = "Online Shoppers ML App", layout="wide")
 
 st.title("Online Shoppers Purchase Prediction")
-st.write("Compare multiple ML models on customer purchase  behaviour")
+st.write("Compare multiple ML model on customer purchase  behaviour")
 
-#load models
+#load model
 with open('model/saved_model.pkl', 'rb') as f:
     models, scaler, metrics = pickle.load(f)
 

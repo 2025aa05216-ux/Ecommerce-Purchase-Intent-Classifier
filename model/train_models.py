@@ -67,7 +67,7 @@ for name, model in models.items():
     }
 
 #Saving
-with open('model/saved_models.pkl', 'wb') as f:
+with open('model/saved_model.pkl', 'wb') as f:
     pickle.dump((models, scaler, metrics), f)
 
 print("Training complete. Model metrics: \n")
