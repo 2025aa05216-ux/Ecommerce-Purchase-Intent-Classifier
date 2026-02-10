@@ -1,9 +1,9 @@
-import streamlit as st
 import pandas as pd
 import pickle
 from sklearn.metrics import confusion_matrix, classification_report
 import matplotlib.pyplot as plt
 import seaborn as sns
+import streamlit as st
 
 st.set_page_config(page_title = "Online Shoppers ML App", layout="wide")
 
