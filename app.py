@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import pickle
-#from sklearn.metrics import confusion_matrix, classification_report
+from sklearn.metrics import confusion_matrix, classification_report
 import matplotlib.pyplot as plt
 import seaborn as sns
 
