@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import joblib
 import io
+import pickle
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import confusion_matrix, classification_report
@@ -17,13 +18,10 @@ st.title("🛒 Ecommerce Purchase Intent Classifier")
 # ---------------- LOAD MODEL ----------------
 @st.cache_resource
 def load_artifacts():
-    return joblib.load("model/saved_model.pkl")
+    with open("model/saved_model.pkl", "rb") as f:
+        return pickle.load(f)
 
-bundle = load_artifacts()
-models = bundle["models"]
-scaler = bundle["scaler"]
-metrics_df = bundle["metrics"]
-
+models, scaler, metrics_df = load_artifacts()
 FEATURE_COLUMNS = list(scaler.feature_names_in_)
 
 # ---------------- SIDEBAR ----------------
