@@ -1,8 +1,7 @@
 import streamlit as st
 import pandas as pd
-import joblib
-import io
 import pickle
+import io
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import confusion_matrix, classification_report
@@ -19,13 +18,17 @@ st.title("🛒 Ecommerce Purchase Intent Classifier")
 @st.cache_resource
 def load_artifacts():
     with open("model/saved_model.pkl", "rb") as f:
-        return pickle.load(f)
+        models, scaler, metrics = pickle.load(f)
+
+    # ✅ Convert metrics dict → DataFrame
+    metrics_df = pd.DataFrame(metrics).T
+    return models, scaler, metrics_df
 
 models, scaler, metrics_df = load_artifacts()
 FEATURE_COLUMNS = list(scaler.feature_names_in_)
 
 # ---------------- SIDEBAR ----------------
-st.sidebar.header("Controls")
+st.sidebar.header("⚙️ Controls")
 
 model_name = st.sidebar.selectbox(
     "Select ML Model",
@@ -39,14 +42,19 @@ uploaded_file = st.sidebar.file_uploader(
 
 # ---------------- METRICS TABLE ----------------
 st.subheader("📊 Model Evaluation Metrics")
-st.dataframe(metrics_df.style.format("{:.4f}"))
+
+st.dataframe(
+    metrics_df.round(4),
+    use_container_width=True
+)
 
 # ---------------- SAMPLE TEST CSV ----------------
 st.subheader("📥 Download Sample Test CSV")
 
 st.write(
-    "This sample CSV contains **realistic customer sessions**. "
-    "Row 1 = low purchase intent, Row 2 = high purchase intent."
+    "This sample CSV contains **realistic ecommerce sessions**.\n"
+    "- Row 1 → Low purchase intent\n"
+    "- Row 2 → High purchase intent"
 )
 
 sample_df = pd.DataFrame({
@@ -67,7 +75,7 @@ sample_df = pd.DataFrame({
     "TrafficType": [3, 2],
     "VisitorType": [0, 1],
     "Weekend": [0, 1],
-    "Revenue": [0, 1]  # optional (used only for evaluation)
+    "Revenue": [0, 1]  # optional
 })
 
 sample_df = sample_df[FEATURE_COLUMNS + ["Revenue"]]
@@ -76,7 +84,7 @@ csv_buffer = io.StringIO()
 sample_df.to_csv(csv_buffer, index=False)
 
 st.download_button(
-    label="Download Sample Test CSV",
+    "⬇️ Download Sample CSV",
     data=csv_buffer.getvalue(),
     file_name="sample_test_data.csv",
     mime="text/csv"
@@ -89,13 +97,13 @@ if uploaded_file:
     st.subheader("📄 Uploaded Data Preview")
     st.dataframe(df.head())
 
-    # Extract target if available
+    # Extract target if present
     y_true = None
     if "Revenue" in df.columns:
         y_true = df["Revenue"]
         df = df.drop(columns=["Revenue"])
 
-    # Validate columns
+    # Column validation
     missing_cols = set(FEATURE_COLUMNS) - set(df.columns)
     if missing_cols:
         st.error(f"❌ Missing columns: {missing_cols}")
@@ -108,7 +116,7 @@ if uploaded_file:
     model = models[model_name]
     predictions = model.predict(X_scaled)
 
-    # Prediction Results
+    # ---------------- RESULTS ----------------
     st.subheader("🔮 Prediction Results")
 
     result_df = pd.DataFrame({
@@ -128,10 +136,20 @@ if uploaded_file:
     # ---------------- EVALUATION ----------------
     if y_true is not None:
         st.subheader("📑 Classification Report")
-        report = classification_report(y_true, predictions, output_dict=True)
-        st.dataframe(pd.DataFrame(report).transpose())
+
+        report = classification_report(
+            y_true,
+            predictions,
+            output_dict=True
+        )
+
+        st.dataframe(
+            pd.DataFrame(report).transpose().round(4),
+            use_container_width=True
+        )
 
         st.subheader("🧩 Confusion Matrix")
+
         cm = confusion_matrix(y_true, predictions)
 
         fig, ax = plt.subplots()
@@ -144,7 +162,8 @@ if uploaded_file:
         )
         ax.set_xlabel("Predicted")
         ax.set_ylabel("Actual")
+
         st.pyplot(fig)
 
 else:
-    st.info("⬅ Download the sample CSV or upload your own CSV to start predictions.")
+    st.info("⬅️ Download the sample CSV or upload your own CSV to start predictions.")
