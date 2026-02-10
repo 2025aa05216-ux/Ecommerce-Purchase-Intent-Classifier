@@ -85,23 +85,25 @@ An interactive **Streamlit web application** is developed to:
 ---
 
 ## Project Structure
+
+```text
 ecommerce-purchase-intent-classifier/
 │
-├── app.py # Streamlit application
-├── requirements.txt # Project dependencies
+├── app.py                    # Streamlit application
+├── requirements.txt          # Project dependencies
 ├── model/
-│ └── saved_model.pkl # Trained models, scaler, and metrics
-├── sample_test_data.csv # Sample test dataset
+│   └── saved_model.pkl       # Trained models, scaler, and metrics
+├── sample_test_data.csv      # Sample test dataset
 └── README.md
 
-
+```
 ---
 
 ## ▶️ How to Run the Application Locally
 ```bash
 pip install -r requirements.txt
 streamlit run app.py
-
+```
 
 Conclusion
 
