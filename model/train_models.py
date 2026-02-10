@@ -13,7 +13,7 @@ from xgboost import XGBClassifier
 from sklearn.metrics import accuracy_score, roc_auc_score, precision_score, recall_score, f1_score, matthews_corrcoef
 
 #Load dataset
-df = pd.read_csv("online_shoppers_intention.csv")
+df = pd.read_csv("data/online_shoppers_intention.csv")
 
 #Encoding columns - categorical
 cat_cols = ['Month', 'VisitorType','Weekend']
