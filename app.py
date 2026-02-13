@@ -12,7 +12,7 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("🛒 Ecommerce Purchase Intent Classifier")
+st.title("Ecommerce Purchase Intent Classifier")
 
 # ---------------- LOAD MODEL ----------------
 @st.cache_resource
@@ -20,7 +20,7 @@ def load_artifacts():
     with open("model/saved_model.pkl", "rb") as f:
         models, scaler, metrics = pickle.load(f)
 
-    # ✅ Convert metrics dict → DataFrame
+    # Convert metrics dict → DataFrame
     metrics_df = pd.DataFrame(metrics).T
     return models, scaler, metrics_df
 
@@ -28,7 +28,7 @@ models, scaler, metrics_df = load_artifacts()
 FEATURE_COLUMNS = list(scaler.feature_names_in_)
 
 # ---------------- SIDEBAR ----------------
-st.sidebar.header("⚙️ Controls")
+st.sidebar.header("Controls")
 
 model_name = st.sidebar.selectbox(
     "Select ML Model",
@@ -41,7 +41,7 @@ uploaded_file = st.sidebar.file_uploader(
 )
 
 # ---------------- METRICS TABLE ----------------
-st.subheader("📊 Model Evaluation Metrics")
+st.subheader("Model Evaluation Metrics")
 
 st.dataframe(
     metrics_df.round(4),
@@ -49,7 +49,7 @@ st.dataframe(
 )
 
 # ---------------- SAMPLE TEST CSV ----------------
-st.subheader("📥 Download Sample Test CSV")
+st.subheader("Download Sample Test CSV")
 
 st.write(
     "This sample CSV contains **realistic ecommerce sessions**.\n"
@@ -75,7 +75,7 @@ sample_df = pd.DataFrame({
     "TrafficType": [3, 2],
     "VisitorType": [0, 1],
     "Weekend": [0, 1],
-    "Revenue": [0, 1]  # optional
+    "Revenue": [0, 1]  
 })
 
 sample_df = sample_df[FEATURE_COLUMNS + ["Revenue"]]
@@ -84,7 +84,7 @@ csv_buffer = io.StringIO()
 sample_df.to_csv(csv_buffer, index=False)
 
 st.download_button(
-    "⬇️ Download Sample CSV",
+    " Download Sample CSV",
     data=csv_buffer.getvalue(),
     file_name="sample_test_data.csv",
     mime="text/csv"
@@ -94,7 +94,7 @@ st.download_button(
 if uploaded_file:
     df = pd.read_csv(uploaded_file)
 
-    st.subheader("📄 Uploaded Data Preview")
+    st.subheader("Uploaded Data Preview")
     st.dataframe(df.head())
 
     # Extract target if present
@@ -106,7 +106,7 @@ if uploaded_file:
     # Column validation
     missing_cols = set(FEATURE_COLUMNS) - set(df.columns)
     if missing_cols:
-        st.error(f"❌ Missing columns: {missing_cols}")
+        st.error(f" Missing columns: {missing_cols}")
         st.stop()
 
     df = df[FEATURE_COLUMNS]
@@ -117,7 +117,7 @@ if uploaded_file:
     predictions = model.predict(X_scaled)
 
     # ---------------- RESULTS ----------------
-    st.subheader("🔮 Prediction Results")
+    st.subheader("Prediction Results")
 
     result_df = pd.DataFrame({
         "Prediction": predictions
@@ -125,7 +125,7 @@ if uploaded_file:
 
     st.dataframe(result_df)
 
-    st.subheader("📊 Prediction Counts")
+    st.subheader("Prediction Counts")
     st.dataframe(
         result_df["Prediction"]
         .value_counts()
@@ -135,7 +135,7 @@ if uploaded_file:
 
     # ---------------- EVALUATION ----------------
     if y_true is not None:
-        st.subheader("📑 Classification Report")
+        st.subheader("Classification Report")
 
         report = classification_report(
             y_true,
@@ -148,7 +148,7 @@ if uploaded_file:
             use_container_width=True
         )
 
-        st.subheader("🧩 Confusion Matrix")
+        st.subheader("Confusion Matrix")
 
         cm = confusion_matrix(y_true, predictions)
 
@@ -166,4 +166,4 @@ if uploaded_file:
         st.pyplot(fig)
 
 else:
-    st.info("⬅️ Download the sample CSV or upload your own CSV to start predictions.")
+    st.info("Download the sample CSV or upload your own CSV to start predictions.")
